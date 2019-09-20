@@ -10,7 +10,13 @@
         <div class="right" @click="nextPage"></div>
       </div>
     </div>
-    <menu-bar :ifTitleAndMenuShow="ifTitleAndMenuShow"></menu-bar>
+    <menu-bar
+      ref="menuBar"
+      :ifTitleAndMenuShow="ifTitleAndMenuShow"
+      :fontSizeList="fontSizeList"
+      @setFontSize="setFontSize"
+      :defaultFontSize="defaultFontSize"
+    ></menu-bar>
   </div>
 </template>
 
@@ -23,20 +29,29 @@
   global.ePub = Epub;
   export default {
     name: "Ebook",
-    data () {
+    data() {
       return {
-        ifTitleAndMenuShow: false
+        ifTitleAndMenuShow: false,
+        fontSizeList: [
+          {fontSize: 12},
+          {fontSize: 14},
+          {fontSize: 16},
+          {fontSize: 18},
+          {fontSize: 20},
+          {fontSize: 22},
+          {fontSize: 24}],
+        defaultFontSize: 16
       }
     },
     components: {
       TitleBar,
       MenuBar
     },
-    mounted () {
+    mounted() {
       this.showEpub()
     },
     methods: {
-      showEpub () {
+      showEpub() {
         this.book = new Epub(DOWNLOAD_URL);
         // 通过Book.renderTo生成Rendition对象
         this.rendition = this.book.renderTo('read', { //第一个参数是dom的id
@@ -46,20 +61,26 @@
           method: 'default'
         });
         // 通过Rendtion.display渲染电子书
-        this.rendition.display()
+        this.rendition.display();
         console.log(this.book);
       },
-      toggleTitleAndMenu () {
-        this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow
+      toggleTitleAndMenu() {
+        this.ifTitleAndMenuShow = !this.ifTitleAndMenuShow;
+        if (!this.ifTitleAndMenuShow) {
+          this.$refs.menuBar.hideSetting()
+        }
+      },
+      setFontSize(size) {
+        this.defaultFontSize = size
       },
       //上一页
-      prevPage () {
+      prevPage() {
         if (this.rendition) {
           this.rendition.prev();
         }
       },
       // 下一页
-      nextPage () {
+      nextPage() {
         if (this.rendition) {
           this.rendition.next()
         }

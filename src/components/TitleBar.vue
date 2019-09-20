@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-down">
-    <div class="title-wrapper" v-show="!ifTitleAndMenuShow">
+    <div class="title-wrapper" v-show="ifTitleAndMenuShow">
       <div class="left">
         <span class="icon-back icon"></span>
       </div>

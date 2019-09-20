@@ -1,8 +1,9 @@
 <template>
   <div class="menu-bar">
     <transition name="slide-up">
-      <div class="menu-wrapper" :class="{'hide-box-shadow22': ifSettingShow || !ifTitleAndMenuShow}"
-           v-show="!ifTitleAndMenuShow">
+      <!-- hide-box-shadow 出现设置面板以及整个menubar隐藏时 不显示wrapper的阴影-->
+      <div class="menu-wrapper" :class="{'hide-box-shadow': ifSettingShow || !ifTitleAndMenuShow}"
+           v-show="ifTitleAndMenuShow">
         <div class="icon-wrapper">
           <span class="icon-menu icon" @click="showSetting(3)"></span>
         </div>
@@ -17,9 +18,35 @@
         </div>
       </div>
     </transition>
-    <div class="setting-wrapper">
-      <div class="setting-font-size"></div>
-    </div>
+    <transition name="slide-up">
+      <div class="setting-wrapper" v-show="ifSettingShow">
+        <div class="setting-font-size">
+          <div class="preview" :style="{fontSize:defaultFontSize+'px'}">A</div>
+          <div class="select">
+            <div class="select-wrapper" v-for="fontSize in fontSizeList" @click="setFontSize(fontSize)">
+              <div class="line"></div>
+              <div class="point-wrapper">
+                <div class="point" v-show="defaultFontSize===fontSize.fontSize">
+                  <div class="small-point"></div>
+                </div>
+              </div>
+              <div class="line"></div>
+            </div>
+            <!--          <div class="select-wrapper">-->
+            <!--            <div class="line"></div>-->
+            <!--            <div class="point-wrapper">-->
+            <!--              <div class="point">-->
+            <!--                <div class="small-point"></div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+            <!--            <div class="line"></div>-->
+            <!--          </div>-->
+          </div>
+          <div class="preview" :style="{fontSize:fontSizeList[fontSizeList.length-1].fontSize+'px'}">A</div>
+        </div>
+      </div>
+
+    </transition>
   </div>
 </template>
 
@@ -31,14 +58,26 @@
         type: Boolean,
         default: false
       },
+      fontSizeList: {
+        type: Array
+      },
+      defaultFontSize: Number,
     },
-    data () {
+    data() {
       return {
         ifSettingShow: false,
       }
     },
     methods: {
-      showSetting () {
+      showSetting() {
+        this.ifSettingShow = true;
+      },
+      hideSetting() {
+        this.ifSettingShow = false;
+      },
+      setFontSize(size) {
+        // console.log(size)
+        this.$emit('setFontSize', size.fontSize)
       }
     }
   }
