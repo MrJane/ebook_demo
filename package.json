@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "vue": "^2.5.2",
-    "epubjs": "^0.3.63",
+    "epubjs": "^0.3.93",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
